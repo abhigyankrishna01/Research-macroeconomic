@@ -30,12 +30,14 @@ class BMAEngine:
         X = np.asarray(X, dtype=float)
         X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
 
+        print(f"[BMAEngine] Fitting {len(self._strategies)} strategies on {len(X)} steps ...")
         all_weights = []
         for strat in self._strategies:
             w = strat.predict(X)
             all_weights.append(w)
         self._strategy_weights = all_weights
         self._X_fit = X
+        print("[BMAEngine] Fit complete.")
         return self
 
     def predict(self, X: np.ndarray = None) -> dict:
@@ -84,3 +86,10 @@ class BMAEngine:
             "uncertainty":      entropy,
             "strategy_weights": all_weights,
         }
+
+    def get_dominant_strategy(self, t: int = -1) -> str:
+        """Return the strategy name with the highest posterior at time step t."""
+        if self.model_posteriors is None:
+            raise RuntimeError("Call predict() before get_dominant_strategy().")
+        idx = int(np.argmax(self.model_posteriors[t]))
+        return self.strategy_names[idx]
