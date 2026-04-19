@@ -18,6 +18,7 @@ def _softmax(x: np.ndarray) -> np.ndarray:
 
 class MomentumStrategy:
     """Overweight assets with the strongest recent returns."""
+    name = "Momentum"
 
     def predict(self, log_returns: np.ndarray) -> np.ndarray:
         """
@@ -36,6 +37,7 @@ class MomentumStrategy:
 
 class MeanReversionStrategy:
     """Overweight assets that have underperformed recently (contrarian)."""
+    name = "MeanReversion"
 
     def predict(self, log_returns: np.ndarray) -> np.ndarray:
         T, N = log_returns.shape
@@ -50,6 +52,7 @@ class MeanReversionStrategy:
 
 class LowVolatilityStrategy:
     """Overweight low-volatility assets (inverse volatility weighting)."""
+    name = "LowVolatility"
 
     def predict(self, log_returns: np.ndarray) -> np.ndarray:
         T, N = log_returns.shape
