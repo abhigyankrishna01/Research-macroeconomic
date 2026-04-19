@@ -51,6 +51,8 @@ def train_ppo(data: dict, hmm_model, bma_engine, total_timesteps: int = None):
         total_timesteps = config.PPO_TOTAL_TIMESTEPS
 
     os.makedirs(config.PPO_MODEL_DIR, exist_ok=True)
+    print(f"[ppo_agent] Training PPO for {total_timesteps:,} timesteps ...")
+    print(f"[ppo_agent] Train set size: {len(data['X_train'])} steps | {config.N_ASSETS} assets")
 
     bma_result = bma_engine.predict(data["X_train"])
     regime_post = hmm_model.predict_proba(data["X_train"], data["macro_train"])
