@@ -36,6 +36,15 @@ def _portfolio_returns(log_returns: np.ndarray, weights: np.ndarray) -> np.ndarr
     return (log_returns * weights).sum(axis=1)
 
 
+def _avg_turnover(weights: np.ndarray) -> float:
+    """Mean daily L1 weight change — proxy for transaction cost pressure."""
+    w = np.asarray(weights, dtype=float)
+    if w.ndim == 1:
+        return 0.0
+    diffs = np.abs(np.diff(w, axis=0))
+    return float(diffs.sum(axis=1).mean())
+
+
 def equal_weight(log_returns: np.ndarray) -> np.ndarray:
     T, N = log_returns.shape
     w = np.ones(N) / N
@@ -146,6 +155,10 @@ def run_backtest(data: dict, hmm_model, bma_engine,
     else:
         results["Macro-HMM-BMA"] = compute_metrics(_portfolio_returns(R, bma_w), "Macro-HMM-BMA")
 
+    results["_turnover"] = {
+        "BMA (no PPO)":  _avg_turnover(bma_w),
+        "Macro-HMM-BMA": _avg_turnover(results.get("_ppo_weights", bma_w)),
+    }
     results["_bma_weights"]      = bma_w
     results["_regime_posteriors"]= regime_post
     results["_bma_posteriors"]   = bma_result["model_posteriors"]
