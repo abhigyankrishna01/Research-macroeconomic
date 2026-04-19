@@ -70,14 +70,22 @@ class BaseHMM:
         return np.argmax(proba, axis=1)
 
 
+def get_regime_label(posteriors: np.ndarray) -> str:
+    """Return the dominant regime name for a single posterior vector."""
+    idx = int(np.argmax(posteriors))
+    return config.HMM_REGIME_NAMES[idx]
+
+
 class MacroConditionedHMM:
     """
     Blends HMM posteriors with a logistic regression model trained on macro features.
     Final posterior = alpha * hmm_posterior + (1-alpha) * macro_posterior
+    alpha is configurable at instantiation (default 0.7).
     """
-    ALPHA = 0.7   # weight given to HMM signal
+    DEFAULT_ALPHA = 0.7
 
-    def __init__(self):
+    def __init__(self, alpha: float = None):
+        self.ALPHA   = alpha if alpha is not None else self.DEFAULT_ALPHA
         self._hmm    = BaseHMM()
         self._lr     = LogisticRegression(max_iter=1000, random_state=42)
         self._scaler = StandardScaler()
