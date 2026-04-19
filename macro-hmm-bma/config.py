@@ -60,6 +60,9 @@ MEAN_REV_WINDOW  = 20
 LOW_VOL_WINDOW   = 20
 
 # ── PPO environment ──────────────────────────────────────────────────────────
+MVO_WINDOW           = 252     # lookback window (days) for Markowitz MVO estimation
+
+# ── PPO environment ──────────────────────────────────────────────────────────
 PPO_TRANSACTION_COST = 0.001   # one-way transaction cost fraction
 PPO_REWARD_WINDOW    = 20      # rolling window for Sharpe reward
 
@@ -77,6 +80,7 @@ PPO_MODEL_DIR       = os.path.join(os.path.dirname(__file__), "models", "saved")
 
 # ── Rolling normalisation window ────────────────────────────────────────────
 ROLLING_NORM_WINDOW = 252
+ZSCORE_CLIP         = 5.0    # clip z-scores to ±5 std to suppress extreme outliers
 
 # ── Backtest ─────────────────────────────────────────────────────────────────
 RISK_FREE_RATE = 0.02    # annualised risk-free rate used in Sharpe / Sortino
