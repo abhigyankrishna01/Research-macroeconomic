@@ -22,6 +22,8 @@ FRED_SERIES = {
     "FEDFUNDS": "FEDFUNDS",
     "UNRATE":   "UNRATE",
 }
+MACRO_COLS   = list(FRED_SERIES.keys())   # ["GDP", "CPI", "FEDFUNDS", "UNRATE"]
+N_MACRO      = len(MACRO_COLS)
 FRED_API_KEY = os.getenv("FRED_API_KEY", "")
 
 # ── Data paths ───────────────────────────────────────────────────────────────
