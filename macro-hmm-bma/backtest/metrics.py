@@ -81,14 +81,30 @@ def total_return(returns) -> float:
     return float(np.exp(r.sum()) - 1.0)
 
 
+def annualised_volatility(returns) -> float:
+    r = _clean(returns)
+    if len(r) < 2:
+        return 0.0
+    return float(r.std() * np.sqrt(config.TRADING_DAYS))
+
+
+def win_rate(returns) -> float:
+    r = _clean(returns)
+    if len(r) == 0:
+        return 0.0
+    return float(np.sum(r > 0) / len(r))
+
+
 def compute_metrics(returns, name: str = "") -> dict:
     r = _clean(returns)
     return {
-        "Strategy":     name,
-        "Total Return": round(total_return(r) * 100, 2),
-        "CAGR (%)":     round(cagr(r) * 100, 2),
-        "Sharpe":       round(sharpe_ratio(r), 3),
-        "Sortino":      round(sortino_ratio(r), 3),
-        "Max Drawdown": round(max_drawdown(r) * 100, 2),
-        "Calmar":       round(calmar_ratio(r), 3),
+        "Strategy":       name,
+        "Total Return":   round(total_return(r) * 100, 2),
+        "CAGR (%)":       round(cagr(r) * 100, 2),
+        "Sharpe":         round(sharpe_ratio(r), 3),
+        "Sortino":        round(sortino_ratio(r), 3),
+        "Max Drawdown":   round(max_drawdown(r) * 100, 2),
+        "Calmar":         round(calmar_ratio(r), 3),
+        "Ann. Vol (%)":   round(annualised_volatility(r) * 100, 2),
+        "Win Rate (%)":   round(win_rate(r) * 100, 2),
     }
