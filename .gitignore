@@ -1,5 +1,6 @@
 # ── Secrets — NEVER commit these ────────────────────────────
 .env
+.env.local
 *.pem
 *.key
 *.p12
@@ -23,6 +24,20 @@ build/
 htmlcov/
 .coverage
 coverage.xml
+
+# ── Macro-HMM-BMA project ────────────────────────────────────
+# Virtual environment
+macro-hmm-bma/venv/
+
+# Raw and processed data (large files; sample/ CSVs ARE committed)
+macro-hmm-bma/data/raw/
+macro-hmm-bma/data/processed/
+
+# Trained PPO model checkpoints
+macro-hmm-bma/models/saved/
+
+# Streamlit secrets
+.streamlit/secrets.toml
 
 # ── MLflow artifacts ─────────────────────────────────────────
 mlruns/
