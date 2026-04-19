@@ -12,16 +12,25 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 import config
 
 
-def fetch_prices() -> pd.DataFrame:
+def fetch_prices(retries: int = 3) -> pd.DataFrame:
     import yfinance as yf
+    import time
     print(f"[fetch_data] Downloading prices for {config.ASSETS} ...")
-    raw = yf.download(
-        config.ASSETS,
-        start=config.START_DATE,
-        end=config.END_DATE,
-        auto_adjust=True,
-        progress=False,
-    )
+    for attempt in range(1, retries + 1):
+        try:
+            raw = yf.download(
+                config.ASSETS,
+                start=config.START_DATE,
+                end=config.END_DATE,
+                auto_adjust=True,
+                progress=False,
+            )
+            break
+        except Exception as exc:
+            print(f"[fetch_data] Attempt {attempt}/{retries} failed: {exc}")
+            if attempt == retries:
+                raise
+            time.sleep(2 ** attempt)
     if isinstance(raw.columns, pd.MultiIndex):
         prices = raw["Close"]
     else:
