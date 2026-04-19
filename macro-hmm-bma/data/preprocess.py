@@ -30,10 +30,14 @@ def interpolate_macro(macro: pd.DataFrame, target_index: pd.DatetimeIndex) -> pd
     return macro
 
 
-def _rolling_zscore(df: pd.DataFrame, window: int) -> pd.DataFrame:
+def _rolling_zscore(df: pd.DataFrame, window: int,
+                    clip: float = None) -> pd.DataFrame:
+    if clip is None:
+        clip = config.ZSCORE_CLIP
     roll_mean = df.rolling(window, min_periods=1).mean()
     roll_std  = df.rolling(window, min_periods=1).std().replace(0, 1e-8)
-    return (df - roll_mean) / roll_std
+    z = (df - roll_mean) / roll_std
+    return z.clip(-clip, clip)
 
 
 def split_data(log_ret: pd.DataFrame, macro_daily: pd.DataFrame):
